@@ -16,7 +16,7 @@ int main() {
 
 	string filterBy = filterOptions[getFilterIndx()-1];
 
-	AVLTree tree();
+	AVLTree tree;
 
 	string filePath = "Text.txt";
 	ifstream data;
@@ -27,16 +27,20 @@ int main() {
 
 	while (data) {
 
-		if (counter != 0) {
+		if (counter != 0) 
+		{
 			Node* companyInfo = createNode(line, filterBy);
+			if(companyInfo != nullptr) tree.insert(companyInfo);
 			counter++;
 		}
-		else {
+		else 
+		{
 			counter++;
 		}
 		getline(data, line);
 	}
 	data.close();
+	tree.print();
 	return 0;
 }
 

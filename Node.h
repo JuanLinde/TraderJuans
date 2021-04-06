@@ -18,6 +18,13 @@ public:
 	Node* left, *right;
 
 	Node(std::vector<std::string>);
+	std::string getPriceEarnings() { return priceEarningsRatio; }
+	std::string getSymbol() { return symbol; }
+	std::string getSector() { return sector; }
+	Node* getLeft() { return left; }
+	Node* getRight() { return right; }
+	void setLeft(Node* n) { left = n; }
+	void setRight(Node* n) { right = n; }
 };
 
 Node::Node(std::vector<std::string> v) {

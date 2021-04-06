@@ -1,0 +1,2 @@
+*Update insert helper. Remember that the insert signature changed from two 
+node pointeers to one.
