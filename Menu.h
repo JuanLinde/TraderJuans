@@ -102,7 +102,6 @@ Menu::Menu(std::string type, std::string r) {
 		prompt = "Filter by: ";
 
 		comments = "Please type an option for filtering your results: \n"
-			"12: Return to choose property\n"
 			"0: Quit Program\n"
 			"1: None\n"
 			"2: Industrials\n"
@@ -113,9 +112,8 @@ Menu::Menu(std::string type, std::string r) {
 			"7: Energy\n"
 			"8: Financials\n"
 			"9: Utilities\n"
-			"10: Real State\n"
+			"10: Real Estate\n"
 			"11: Telecommunications\n"
-			"12: Return to choose property\n"
 			"0: Quit Program\n";
 
 		result = r;

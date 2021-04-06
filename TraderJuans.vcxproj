@@ -142,6 +142,7 @@
     <ClCompile Include="driver.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AVLTree.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Node.h" />
   </ItemGroup>
