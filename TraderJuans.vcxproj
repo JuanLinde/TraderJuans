@@ -143,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AVLTree.h" />
+    <ClInclude Include="MaxHeap.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Node.h" />
   </ItemGroup>

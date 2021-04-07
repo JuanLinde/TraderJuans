@@ -18,6 +18,7 @@ public:
 	Node* left, *right;
 
 	Node(std::vector<std::string>);
+	Node(int pe) { priceEarningsRatio = std::to_string(pe); }
 	std::string getPriceEarnings() { return priceEarningsRatio; }
 	std::string getSymbol() { return symbol; }
 	std::string getSector() { return sector; }

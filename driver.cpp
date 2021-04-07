@@ -4,44 +4,104 @@
 #include<unordered_map>
 #include"menu.h"
 #include "AVLTree.h"
+#include "MaxHeap.h"
 using namespace std;
 
 int getFilterIndx();
 Node* createNode(string, string);
 
-int main() {
+int main(int argc, char* argv[]) {
 
-	string filterOptions[] = { "None", "Industrials", "Health Care", "IT", "Consumer Discretionary", "Consumer Staples",
-							  "Energy", "Financials", "Utilities", "Real Estate", "Telecommunications" };
+	char commandArgument = *argv[1];
 
-	string filterBy = filterOptions[getFilterIndx()-1];
+	if (commandArgument == '1')
+	{
+		string filterOptions[] = { "None", "Industrials", "Health Care", "IT", "Consumer Discretionary", "Consumer Staples",
+								  "Energy", "Financials", "Utilities", "Real Estate", "Telecommunications" };
 
-	AVLTree tree;
+		string filterBy = filterOptions[getFilterIndx() - 1];
 
-	string filePath = "Text.txt";
-	ifstream data;
-	data.open(filePath);
-	string line;
-	int counter = 0;
-	getline(data, line);
+		AVLTree tree;
 
-	while (data) {
-
-		if (counter != 0) 
-		{
-			Node* companyInfo = createNode(line, filterBy);
-			if(companyInfo != nullptr) tree.insert(companyInfo);
-			counter++;
-		}
-		else 
-		{
-			counter++;
-		}
+		string filePath = "Text.txt";
+		ifstream data;
+		data.open(filePath);
+		string line;
+		int counter = 0;
 		getline(data, line);
+
+		while (data) {
+
+			if (counter != 0)
+			{
+				Node* companyInfo = createNode(line, filterBy);
+				if (companyInfo != nullptr) tree.insert(companyInfo);
+				counter++;
+			}
+			else
+			{
+				counter++;
+			}
+			getline(data, line);
+		}
+		data.close();
+		tree.print();
+		return 0;
 	}
-	data.close();
-	tree.print();
-	return 0;
+	if (commandArgument == '2') {
+		// The following collapsed comments contain data reading code
+
+		//string filterOptions[] = { "None", "Industrials", "Health Care", "IT", "Consumer Discretionary", "Consumer Staples",
+		//				  "Energy", "Financials", "Utilities", "Real Estate", "Telecommunications" };
+		//string filterBy = filterOptions[getFilterIndx() - 1];
+		//string filePath = "Text.txt";
+		//ifstream data;
+		//data.open(filePath);
+		//string line;
+		//// Reads the data and inserts it into the heap
+		//int counter = 0;
+		//getline(data, line);
+		//while (data) {
+		//	//Skips the first line of the file
+		//	if (counter != 0)
+		//	{
+		//		Node* companyInfo = createNode(line, filterBy);
+		//		if (companyInfo != nullptr) 
+		//		counter++;
+		//	}
+		//	else
+		//	{
+		//		counter++;
+		//	}
+		//	getline(data, line);
+		//}
+		//data.close();
+		MaxHeap heap;
+		Node* node = new Node(1);
+		Node* node2 = new Node(2);
+		Node* node3 = new Node(3);
+		Node* node10 = new Node(10);
+		Node* node5 = new Node(5);
+		Node* node100 = new Node(100);
+		Node* node4 = new Node(4);
+
+		heap.insert(node);
+		heap.insert(node2);
+		heap.insert(node3);
+		heap.insert(node10);
+		heap.insert(node5);
+		heap.insert(node100);
+		heap.insert(node4);
+		heap.print();
+
+		return 0;
+	}
+	else {
+		cout << "no arguments" << endl;
+		return 0;
+	}
+
+
 }
 
 int getFilterIndx() {
