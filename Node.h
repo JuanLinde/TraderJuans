@@ -3,11 +3,11 @@
 
 class Node {
 public:
+	std::string priceEarningsRatio;
 	std::string symbol;
 	std::string name;
 	std::string sector;
 	std::string price;
-	std::string priceEarningsRatio;
 	std::string dividendYield;
 	std::string earningsShareRatio;
 	std::string weekLow52;
