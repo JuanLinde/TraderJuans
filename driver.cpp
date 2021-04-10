@@ -11,6 +11,7 @@ using namespace std::chrono;
 
 int getFilterIndx();
 Node* createNode(string, string);
+bool getContinueResponse();
 
 int main(int argc, char* argv[]) {
 
@@ -18,76 +19,104 @@ int main(int argc, char* argv[]) {
 
 	if (commandArgument == '1')
 	{
-		string filterOptions[] = { "None", "Industrials", "Health Care", "IT", 
-			                       "Consumer Discretionary", "Consumer Staples",
-								   "Energy", "Financials", "Utilities", "Real Estate", 
-			                       "Telecommunications" };
+		std::cout << "FUNCTIONALITY WITH AVL TREE" << endl;
+		bool userWantsToContinue = true;
+		do
+		{
+			string filterOptions[] = { "None", "Industrials", "Health Care", 
+				                       "Information Technology", "Consumer Discretionary",
+									   "Consumer Staples", "Energy", "Financials",
+									   "Utilities", "Real Estate", "Telecommunication Services" };
+									   
+			int filterIndex = getFilterIndx();
+			bool userWantsToQuit = (filterIndex == -1);
+			if (userWantsToQuit) return 0;
 
-		string filterBy = filterOptions[getFilterIndx() - 1];
+			string filterBy = filterOptions[filterIndex - 1];
 
-		AVLTree tree;
+			AVLTree tree;
 
-		string filePath = "Text.txt";
-		ifstream data;
-		data.open(filePath);
-		string line;
-		int counter = 0;
-		getline(data, line);
+			string filePath = "Text.txt";
+			ifstream data;
+			data.open(filePath);
+			string line;
+			int counter = 0;
+			std::getline(data, line);
+			auto start = high_resolution_clock::now();
+			while (data) {
 
-		while (data) {
-
-			if (counter != 0)
-			{
-				Node* companyInfo = createNode(line, filterBy);
-				if (companyInfo != nullptr) tree.insert(companyInfo);
-				counter++;
+				if (counter != 0)
+				{
+					Node* companyInfo = createNode(line, filterBy);
+					if (companyInfo != nullptr && companyInfo->getPriceEarnings() != "")
+					{
+						tree.insert(companyInfo);
+					}
+					counter++;
+				}
+				else
+				{
+					counter++;
+				}
+				std::getline(data, line);
 			}
-			else
-			{
-				counter++;
-			}
-			getline(data, line);
-		}
-		data.close();
-		tree.print();
+			data.close();
+			tree.print();
+			auto end = high_resolution_clock::now();
+			auto duration = duration_cast<milliseconds>(end - start);
+			std::cout << duration.count() << endl;
+			userWantsToContinue = getContinueResponse(); 
+		} while (userWantsToContinue);
+
+		std::cout << "Goodbye!" << endl;
 		return 0;
 	}
 	if (commandArgument == '2') {
+		cout << "FUNCTIONALITY WITH MAXHEAP" << endl;
+		bool userWantsToContinue = true;
+		do
+		{
+			string filterOptions[] = { "None", "Industrials", "Health Care",
+									   "Information Technology", "Consumer Discretionary",
+									   "Consumer Staples", "Energy", "Financials",
+									   "Utilities", "Real Estate", "Telecommunication Services" };
 
-		string filterOptions[] = { "None", "Industrials", "Health Care", "IT", 
-			                       "Consumer Discretionary", "Consumer Staples",
-						           "Energy", "Financials", "Utilities", "Real Estate", 
-			                       "Telecommunications" };
+			int filterIndex = getFilterIndx();
+			bool userWantsToQuit = (filterIndex == -1);
+			if (userWantsToQuit) return 0;
 
-		string filterBy = filterOptions[getFilterIndx() - 1];
-		string filePath = "Text.txt";
-		ifstream data;
-		data.open(filePath);
-		string line;
-		// Reads the data and inserts it into the heap
-		int counter = 0;
-		getline(data, line);
-		MaxHeap heap;
-		auto start = high_resolution_clock::now();
-		while (data) {
-			//Skips the first line of the file
-			if (counter != 0)
-			{
-				Node* companyInfo = createNode(line, filterBy);
-				if (companyInfo != nullptr && companyInfo->getPriceEarnings() != "")
-				{
-					heap.insert(companyInfo);
-				}
-				counter++;
-			}
-			else counter++;
+			string filterBy = filterOptions[filterIndex - 1];
+			string filePath = "Text.txt";
+			ifstream data;
+			data.open(filePath);
+			string line;
+			// Reads the data and inserts it into the heap
+			int counter = 0;
 			getline(data, line);
-		}
-		heap.sortAndDisplay();
-		auto end = high_resolution_clock::now();
-		auto duration = duration_cast<milliseconds>(end - start);
-		cout << duration.count() << endl;
+			MaxHeap heap;
+			auto start = high_resolution_clock::now();
+			while (data) {
+				//Skips the first line of the file
+				if (counter != 0)
+				{
+					Node* companyInfo = createNode(line, filterBy);
+					if (companyInfo != nullptr && companyInfo->getPriceEarnings() != "")
+					{
+						heap.insert(companyInfo);
+					}
+					counter++;
+				}
+				else counter++;
+				getline(data, line);
+			}
+			heap.sortAndDisplay();
+			auto end = high_resolution_clock::now();
+			auto duration = duration_cast<milliseconds>(end - start);
+			cout << duration.count() << endl;
+			userWantsToContinue = getContinueResponse();
+		} while (userWantsToContinue);
 
+		std::cout << "Goodbye!" << endl;
 		return 0;
 	}
 	else {
@@ -105,12 +134,12 @@ int getFilterIndx() {
 		filterMenu.printMenu();
 		filterResponse = filterMenu.getResponse("filter");
 		if (filterResponse == 0) {
-			cout << "Goodbye!" << endl;
+			std::cout << "Goodbye!" << endl;
 			return -1;
 		}
 		else if (filterResponse < 0 || filterResponse > 11) {
 
-			cout << "Invalid input. Try a number between 0 and 11" << endl << endl;
+			std::cout << "Invalid input. Try a number between 0 and 11" << endl << endl;
 		}
 	} while (filterResponse < 0 || filterResponse > 11);
 
@@ -184,4 +213,24 @@ Node* createNode(string line, string filterBy) {
 		return companyNode;
 	}
 	else return nullptr;
+}
+bool getContinueResponse()
+{
+	bool userAnsweredIncorrectly = true;
+	char answer;
+	do
+	{
+		cout << "Do you want to continue(y/n)? ";
+		cin >> answer;
+		userAnsweredIncorrectly = (answer != 'y' && answer != 'n');
+		if (userAnsweredIncorrectly)
+		{
+			cout << "invalid input. Type y for yes or n for no." << endl;
+		}
+	} while (userAnsweredIncorrectly);
+
+	bool userWantsToContinue = (answer == 'y');
+
+	if (userWantsToContinue) return true;
+	else return false;
 }

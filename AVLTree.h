@@ -67,7 +67,7 @@ Node* AVLTree::insertHelper(Node* nodeStart, Node* nodeInsert)
 		}
 		else {
 			// If key is less than current node's key, insert to the left recursively
-			if (stoi(nodeInsert->getPriceEarnings()) <= stoi(nodeStart->getPriceEarnings())) {
+			if (stof(nodeInsert->getPriceEarnings()) <= stof(nodeStart->getPriceEarnings())) {
 
 				nodeStart->setLeft(insertHelper(nodeStart->getLeft(), nodeInsert));
 
@@ -309,6 +309,7 @@ Node* AVLTree::rotateRight(Node* node) {
 void AVLTree::printInOrder(Node* node) {
 
 	static int nodesTraversed = 0;
+	static int counter = 0;
 
 	if (root == nullptr) {
 		std::cout << "Tree is empty" << std::endl;
@@ -318,26 +319,23 @@ void AVLTree::printInOrder(Node* node) {
 		return;
 	}
 	else {
+		// Visit right
+		printInOrder(node->getRight());
+
+		// Print postOrder
+		std::cout << (++counter) << ": " << node->getSymbol() << ": " << node->getSector() <<
+			": " << node->getPriceEarnings() << std::endl;
+		nodesTraversed++;
+
 		// Visit left
 		printInOrder(node->getLeft());
-		// Ending hasn't been reached: print comma
-		if (nodesTraversed + 1 != numOfNodes) {
-			std::cout << "( " << node->getSymbol() << ":" << node->getSector() << ":" << 
-				node->getPriceEarnings() << " )" << ", ";
-				
-			nodesTraversed++;
-
-		}
-		// End reached: do not print comma
-		else {
-			std::cout << "( " << node->getSymbol() << ":" << node->getSector() << ":" <<
-				node->getPriceEarnings() << " )" << std::endl;
-			nodesTraversed++;
-		}
-		// Visit Right
-		printInOrder(node->getRight());
 		// Resets static variable to zero for subsequent function calls
-		if (nodesTraversed >= numOfNodes) nodesTraversed = 0;
+		if (nodesTraversed >= numOfNodes)
+		{
+			nodesTraversed = 0;
+			counter = 0;
+		}
+			
 	}
 }
 
