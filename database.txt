@@ -1,0 +1,11 @@
+Symbol,Sector,PE_Ratio
+GKQS,Health Care,200.357193
+XFMF,Health Care,200.864105
+ZCBM,Financials,30.560656
+VMKO,Industrials,257.722687
+PWUD,Energy,-227.947418
+QLXZ,Consumer Staples,111.610489
+NDON,Industrials,354.448029
+EDJB,Information Technology,219.263748
+ISQT,Utilities,356.760742
+IZBU,Consumer Discretionary,426.498779

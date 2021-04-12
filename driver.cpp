@@ -26,10 +26,59 @@ int main(int argc, char* argv[]) {
 
 	char commandArgument =  *argv[1];
 
-	generateData();
-
 	if (commandArgument == '1')
 	{
+
+		// Generates the data
+		srand(time(NULL));
+
+		const int NUM_OF_SECTORS = 10;
+		int numOfTuples = 10;
+
+		unordered_set<string> usedSymbols;      // Set to hold the used symbols. No repetition.
+		string listOfSectors[] = { "Industrials", "Health Care",
+								  "Information Technology", "Consumer Discretionary",
+								  "Consumer Staples", "Energy", "Financials","Utilities",
+								  "Real Estate", "Telecommunication Services" };
+		unordered_map<string, int> sectorToFrequency;
+		string symbol = "";
+		string sector = "";
+		string pe = "";                          // Price earning ratio
+		string tuple = "";
+		int lineCounter = 0;                     // Used to avoid overwriting first line in file
+		ofstream outputFile;
+		outputFile.open("database.txt");
+
+		for (int i = 0; i < numOfTuples + 1; i++)
+		{
+
+			if (lineCounter == 0)
+			{
+				outputFile << "Symbol,Sector,PE_Ratio" << endl;
+				lineCounter++;
+			}
+			else
+			{
+				symbol = createSymbol(usedSymbols);
+				sector = chooseSector(listOfSectors, NUM_OF_SECTORS);
+				countSector(sector, sectorToFrequency);
+				pe = createPE();
+				tuple = symbol + "," + sector + "," + pe;
+				outputFile << tuple << endl;
+				lineCounter++;
+			}
+		}
+		// Outputs important summary of the data
+		int freqTotSum = 0;
+		for (auto it = sectorToFrequency.begin(); it != sectorToFrequency.end(); it++)
+		{
+			cout << it->first << ":" << it->second << endl;
+			freqTotSum += it->second;
+		}
+		cout << freqTotSum << endl;
+		outputFile.close();
+
+		//Ouputs the data based on user choice
 		std::cout << "FUNCTIONALITY WITH AVL TREE" << endl;
 		bool userWantsToContinue = true;
 		do
@@ -47,7 +96,7 @@ int main(int argc, char* argv[]) {
 
 			AVLTree tree;
 
-			string filePath = "Text.txt";
+			string filePath = "database.txt";
 			ifstream data;
 			data.open(filePath);
 			string line;
@@ -83,6 +132,58 @@ int main(int argc, char* argv[]) {
 		return 0;
 	}
 	if (commandArgument == '2') {
+
+		// Generates the data
+		srand(time(NULL));
+
+		const int NUM_OF_SECTORS = 10;
+		int numOfTuples = 10;
+
+		unordered_set<string> usedSymbols;      // Set to hold the used symbols. No repetition.
+		string listOfSectors[] = { "Industrials", "Health Care",
+								  "Information Technology", "Consumer Discretionary",
+								  "Consumer Staples", "Energy", "Financials","Utilities",
+								  "Real Estate", "Telecommunication Services" };
+		unordered_map<string, int> sectorToFrequency;
+		string symbol = "";
+		string sector = "";
+		string pe = "";                          // Price earning ratio
+		string tuple = "";
+		int lineCounter = 0;                     // Used to avoid overwriting first line in file
+		ofstream outputFile;
+		outputFile.open("database.txt");
+
+		for (int i = 0; i < numOfTuples + 1; i++)
+		{
+
+			if (lineCounter == 0)
+			{
+				outputFile << "Symbol,Sector,PE_Ratio" << endl;
+				lineCounter++;
+			}
+			else
+			{
+				symbol = createSymbol(usedSymbols);
+				sector = chooseSector(listOfSectors, NUM_OF_SECTORS);
+				countSector(sector, sectorToFrequency);
+				pe = createPE();
+				tuple = symbol + "," + sector + "," + pe;
+				outputFile << tuple << endl;
+				lineCounter++;
+			}
+		}
+		// Outputs important summary of the data
+		int freqTotSum = 0;
+		for (auto it = sectorToFrequency.begin(); it != sectorToFrequency.end(); it++)
+		{
+			cout << it->first << ":" << it->second << endl;
+			freqTotSum += it->second;
+		}
+		cout << freqTotSum << endl;
+		outputFile.close();
+
+		//Ouputs the data based on user choice
+
 		cout << "FUNCTIONALITY WITH MAXHEAP" << endl;
 		bool userWantsToContinue = true;
 		do
@@ -97,7 +198,7 @@ int main(int argc, char* argv[]) {
 			if (userWantsToQuit) return 0;
 
 			string filterBy = filterOptions[filterIndex - 1];
-			string filePath = "Text.txt";
+			string filePath = "database.txt";
 			ifstream data;
 			data.open(filePath);
 			string line;
@@ -163,63 +264,16 @@ Node* createNode(string line, string filterBy) {
 
 	// Checks to see if name of company has comma inside
 	int firstCommaPos = line.find(',');
-	bool nameHasSpaces = (line[firstCommaPos + 1] == '\"');
-	string sector = "";
-	// Ignores the characters of name with spaces as they might be commas
-	if (nameHasSpaces) {
-		int secondQuotePos = line.find('\"', firstCommaPos + 2);
-		int secondCommaPos = line.find(',', secondQuotePos + 1);
-		int thirdCommaPos = line.find(',', secondCommaPos + 1);
-		sector = line.substr(secondCommaPos + 1, thirdCommaPos - secondCommaPos - 1);
-	}
-	else {
-		int secondCommaPos = line.find(',', firstCommaPos + 1);
-		int thirdCommaPos = line.find(',', secondCommaPos + 1);
-		sector = line.substr(secondCommaPos + 1, thirdCommaPos - secondCommaPos - 1);
-	}
+	int secondCommaPos = line.find(',', firstCommaPos + 1);
+	string symbol = line.substr(0, firstCommaPos);
+	string sector = line.substr(firstCommaPos + 1, (secondCommaPos - firstCommaPos-1));
+	string pe = line.substr(secondCommaPos + 1);
 
-	// Creates node only if sector is the correct one
-	if (sector == filterBy || filterBy == "None") {
-		while (line.size() != 0) {
-
-			//Names with spaces might have commas in them
-			if (nameHasSpaces) 
-			{
-				int firstQuotePos = line.find('\"');
-				int secondQuotePos = line.find('\"', firstQuotePos + 1);
-				size_t commaPosition = line.find(',');
-				bool commaFound = (commaPosition != std::string::npos);
-
-				// Ignores commas in between the quotes of the name
-				if (commaFound && (commaPosition < firstQuotePos || 
-					commaPosition > secondQuotePos)) 
-				{
-					string property = line.substr(0, commaPosition);
-					companyProperties.push_back(property);
-					line.erase(0, commaPosition + 1);
-				}
-				else {
-					// Erases the name of the company with quotes after pushing it to vector
-					string property = line.substr(firstQuotePos + 1, secondQuotePos);
-					companyProperties.push_back(property);
-					line.erase(firstQuotePos, secondQuotePos + 2);
-					nameHasSpaces = false;
-				}
-			}
-			else 
-			{
-				size_t commaPosition = line.find(',');
-				bool commaFound = (commaPosition != std::string::npos);
-				if (!commaFound) line.clear();
-				else
-				{
-					string property = line.substr(0, commaPosition);
-					companyProperties.push_back(property);
-					line.erase(0, commaPosition + 1);
-				}
-			}
-		}
-
+	if(sector == filterBy || filterBy == "None")
+	{
+		companyProperties.push_back(symbol);
+		companyProperties.push_back(sector);
+		companyProperties.push_back(pe);
 		Node* companyNode = new Node(companyProperties);
 		return companyNode;
 	}
@@ -340,61 +394,4 @@ string chooseSector(string arr[], const int numOfSec)
 	int indx = rand() % 10;
 	string sector = arr[indx];
 	return sector;
-}
-
-/*
-	Comments: This function generates a data set of 100,000 tuples. The tuples are of the form
-	          "symbol,sector,PE_Ratio." This data is randomly generated using a number of helper
-			  functions.
-
-			  The function prints a summary of the number of occurances of each sector at the end.
-*/
-void generateData()
-{
-	srand(time(NULL));
-
-	const int NUM_OF_SECTORS = 10;
-	int numOfTuples = 100000;
-
-	unordered_set<string> usedSymbols;      // Set to hold the used symbols. No repetition.
-	string listOfSectors[] = { "Industrials", "Health Care",
-							  "Information Technology", "Consumer Discretionary",
-							  "Consumer Staples", "Energy", "Financials","Utilities",
-							  "Real Estate", "Telecommunication Services" };
-	unordered_map<string, int> sectorToFrequency;
-	string symbol = "";
-	string sector = "";
-	string pe = "";                          // Price earning ratio
-	string tuple = "";
-	int lineCounter = 0;                     // Used to avoid overwriting first line in file
-	ofstream outputFile;
-	outputFile.open("data.txt");
-
-	for (int i = 0; i < numOfTuples + 1; i++)
-	{
-
-		if (lineCounter == 0)
-		{
-			outputFile << "Symbol,Sector,PE_Ratio" << endl;
-			lineCounter++;
-		}
-		else
-		{
-			symbol = createSymbol(usedSymbols);
-			sector = chooseSector(listOfSectors, NUM_OF_SECTORS);
-			countSector(sector, sectorToFrequency);
-			pe = createPE();
-			tuple = symbol + "," + sector + "," + pe;
-			outputFile << tuple << endl;
-			lineCounter++;
-		}
-	}
-	int freqTotSum = 0;
-	for (auto it = sectorToFrequency.begin(); it != sectorToFrequency.end(); it++)
-	{
-		cout << it->first << ":" << it->second << endl;
-		freqTotSum += it->second;
-	}
-	cout << freqTotSum << endl;
-	outputFile.close();
 }

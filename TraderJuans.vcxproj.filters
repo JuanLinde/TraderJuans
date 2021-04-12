@@ -34,7 +34,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\Data\data.txt">
+    <Text Include="database.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
