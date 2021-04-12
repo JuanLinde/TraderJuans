@@ -6,16 +6,27 @@
 #include "AVLTree.h"
 #include "MaxHeap.h"
 #include <chrono>
+#include <string>
+#include <unordered_set>
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 using namespace std;
 using namespace std::chrono; 
 
 int getFilterIndx();
 Node* createNode(string, string);
 bool getContinueResponse();
+string createSymbol(unordered_set<string>&);
+string chooseSector(string[], const int);
+void countSector(string, unordered_map<string, int>&);
+string createPE();
+void generateData();
 
 int main(int argc, char* argv[]) {
 
-	char commandArgument = *argv[1];
+	char commandArgument =  *argv[1];
+
+	generateData();
 
 	if (commandArgument == '1')
 	{
@@ -233,4 +244,157 @@ bool getContinueResponse()
 
 	if (userWantsToContinue) return true;
 	else return false;
+}
+/*
+	Output: A string containing a random PE ratio
+
+	Comment: This function creates a random PE ratio using a random() function. It uses a random
+			 number between 0 and 1 to determine if the created pe ratio should be positive or
+			 negative because negative pe ratios are possible. The max pe ratio is 500 the min pe
+			 ratio is -500;
+*/
+string createPE()
+{
+	int posOrNegChooser = rand() % 2;
+	int peWhole = rand() % 500;
+	float peDecimal = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	float pe = peWhole + peDecimal;
+	if (posOrNegChooser == 0) return to_string(pe);
+	else return to_string(-1 * pe);
+}
+
+/*
+	Input: - A string containing the sector
+		   - A reference to an unordered mapping from sector to the frequency of the number of
+			 times it appears in the data.
+
+	Comment: This function maintains an unordered mapping from the sector name to the frequency
+			 of times it appears in the data.
+*/
+void countSector(string sector, unordered_map<string, int>& sectorToFreq)
+{
+	bool sectorIsInMapping = (sectorToFreq.find(sector) != sectorToFreq.end());
+
+	if (sectorIsInMapping)
+	{
+		sectorToFreq[sector] = sectorToFreq[sector] + 1;
+	}
+	else
+	{
+		sectorToFreq[sector] = 1;
+	}
+}
+
+/*
+	Input: An unordered set of strings containing the symbols that have already been used.
+
+	Output: A string containing the created symbol
+
+*/
+string createSymbol(unordered_set<string>& usedSymbols)
+{
+	bool symbolHasBeenUsed;
+	int asciiVal1;
+	int asciiVal2;
+	int asciiVal3;
+	int asciiVal4;
+	char firstChar;
+	char secChar;
+	char thrChar;
+	char fourChar;
+	string symbol;
+
+	do
+	{
+		/* chooses a random capital letter fromASCII*/
+
+		asciiVal1 = rand() % 26 + 65;
+		asciiVal2 = rand() % 26 + 65;
+		asciiVal3 = rand() % 26 + 65;
+		asciiVal4 = rand() % 26 + 65;
+
+		firstChar = asciiVal1;
+		secChar = asciiVal2;
+		thrChar = asciiVal3;
+		fourChar = asciiVal4;
+
+		string firstCharS(1, firstChar), secCharS(1, secChar), thrCharS(1, thrChar),
+			forChar(1, fourChar);
+
+		symbol = firstCharS + secCharS + thrCharS + forChar;
+		symbolHasBeenUsed = (usedSymbols.find(symbol) != usedSymbols.end());
+		if (!symbolHasBeenUsed) usedSymbols.insert(symbol);
+
+	} while (symbolHasBeenUsed);
+	return symbol;
+}
+
+/*
+	Input: - A string array containing the sector  from which to choose
+		   - An int with the number of sectors available
+
+	Output: A randomly selected sector from the list of available sectors
+*/
+string chooseSector(string arr[], const int numOfSec)
+{
+	int indx = rand() % 10;
+	string sector = arr[indx];
+	return sector;
+}
+
+/*
+	Comments: This function generates a data set of 100,000 tuples. The tuples are of the form
+	          "symbol,sector,PE_Ratio." This data is randomly generated using a number of helper
+			  functions.
+
+			  The function prints a summary of the number of occurances of each sector at the end.
+*/
+void generateData()
+{
+	srand(time(NULL));
+
+	const int NUM_OF_SECTORS = 10;
+	int numOfTuples = 100000;
+
+	unordered_set<string> usedSymbols;      // Set to hold the used symbols. No repetition.
+	string listOfSectors[] = { "Industrials", "Health Care",
+							  "Information Technology", "Consumer Discretionary",
+							  "Consumer Staples", "Energy", "Financials","Utilities",
+							  "Real Estate", "Telecommunication Services" };
+	unordered_map<string, int> sectorToFrequency;
+	string symbol = "";
+	string sector = "";
+	string pe = "";                          // Price earning ratio
+	string tuple = "";
+	int lineCounter = 0;                     // Used to avoid overwriting first line in file
+	ofstream outputFile;
+	outputFile.open("data.txt");
+
+	for (int i = 0; i < numOfTuples + 1; i++)
+	{
+
+		if (lineCounter == 0)
+		{
+			outputFile << "Symbol,Sector,PE_Ratio" << endl;
+			lineCounter++;
+		}
+		else
+		{
+			symbol = createSymbol(usedSymbols);
+			sector = chooseSector(listOfSectors, NUM_OF_SECTORS);
+			countSector(sector, sectorToFrequency);
+			pe = createPE();
+			tuple = symbol + "," + sector + "," + pe;
+			outputFile << tuple << endl;
+			lineCounter++;
+		}
+	}
+	int freqTotSum = 0;
+	for (auto it = sectorToFrequency.begin(); it != sectorToFrequency.end(); it++)
+	{
+		cout << it->first << ":" << it->second << endl;
+		freqTotSum += it->second;
+	}
+	cout << freqTotSum << endl;
+	outputFile.close();
 }
