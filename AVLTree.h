@@ -3,6 +3,7 @@
 #include <string>
 #include <queue>
 #include <iostream>
+#include <iomanip>
 class AVLTree 
 {
 
@@ -322,9 +323,12 @@ void AVLTree::printInOrder(Node* node) {
 		// Visit right
 		printInOrder(node->getRight());
 
-		// Print postOrder
-		std::cout << (++counter) << ": " << node->getSymbol() << ": " << node->getSector() <<
-			": " << node->getPriceEarnings() << std::endl;
+		// Print inOrder
+		std::cout << std::setw(6) << std::left << (++counter) << ": " <<
+			std::setw(4) << node->getSymbol() << ": " << std::setw(27) <<
+			node->getSector() << ": " << std::setprecision(2) <<
+			std::fixed << stof(node->getPriceEarnings()) << std::endl;
+
 		nodesTraversed++;
 
 		// Visit left

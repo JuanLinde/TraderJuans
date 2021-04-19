@@ -1,6 +1,7 @@
 #pragma once
 #include "Node.h"
 #include <vector>
+#include <iomanip>
 
 class MaxHeap
 {
@@ -18,6 +19,14 @@ public:
     void print();
 };
 
+
+/*
+    Input: n - A node object to be inserted into the max heap
+
+    Comments: Function takes in a node and inserts it into the max heap. If the max heap is not
+              empty, it performs heapify up on the inserted element to place it in the correct
+              place.
+*/
 void MaxHeap::insert(Node* n) 
 {
     bool heapIsEmpty = (numOfElements == 0);
@@ -58,7 +67,12 @@ void MaxHeap::heapifyUp()
     }
     
 }
-
+/*
+    Inputs: l - left node to be compared
+            r - right node to be compared
+    Output: True if the left node's price earnings ratio is greater than the right node's
+            price earnings ratio.
+*/
 bool MaxHeap::compareNodes(Node* l, Node* r) 
 {
     float leftPriceEarnings = stof(l->getPriceEarnings());
@@ -66,7 +80,11 @@ bool MaxHeap::compareNodes(Node* l, Node* r)
     if (leftPriceEarnings > rightPriceEarnings) return true;
     else return false;
 }
-
+/*
+    Comments: This function iterates through the heap extracting and displaying the first element.
+              After each iteration, the function performs heapify down to make sure the order of 
+              the max heap is not violated.
+*/
 void MaxHeap::sortAndDisplay()
 {
     
@@ -74,8 +92,11 @@ void MaxHeap::sortAndDisplay()
     while (numOfElements != 0)
     {
         // Displays the info of the current largest tuple
-        std::cout << (++counter) << ": " << heap[0]->symbol << ": " << heap[0]->sector << ": " <<
-            heap[0]->getPriceEarnings() << std::endl;
+        std::cout << std::setw(6) << std::right << (++counter) << ": " << heap[0]->symbol << 
+                  ": " << std::setw(27) << std::left << heap[0]->sector << ": " << 
+                  std::setprecision(2) << 
+                  std::fixed << stof(heap[0]->getPriceEarnings()) << std::endl;
+
 
         // Updates first element in the heap
         int lastIndx = heap.size() - 1;

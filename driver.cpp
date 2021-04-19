@@ -20,7 +20,6 @@ string createSymbol(unordered_set<string>&);
 string chooseSector(string[], const int);
 void countSector(string, unordered_map<string, int>&);
 string createPE();
-void generateData();
 
 int main(int argc, char* argv[]) {
 
@@ -33,7 +32,7 @@ int main(int argc, char* argv[]) {
 		srand(time(NULL));
 
 		const int NUM_OF_SECTORS = 10;
-		int numOfTuples = 10;
+		int numOfTuples = 10000;
 
 		unordered_set<string> usedSymbols;      // Set to hold the used symbols. No repetition.
 		string listOfSectors[] = { "Industrials", "Health Care",
@@ -69,17 +68,22 @@ int main(int argc, char* argv[]) {
 			}
 		}
 		// Outputs important summary of the data
+		std::cout << "---------------------------------------" << endl;
+		std::cout << "SUMMARY OF DATA" << endl;
+		std::cout << "---------------------------------------" << endl;
 		int freqTotSum = 0;
 		for (auto it = sectorToFrequency.begin(); it != sectorToFrequency.end(); it++)
 		{
-			cout << it->first << ":" << it->second << endl;
+			cout << setw(27) << left << it->first << ": " << setw(3) << right << it->second << endl;
 			freqTotSum += it->second;
 		}
-		cout << freqTotSum << endl;
+		cout << setw(27) << left << "Number of tuples" << ": " << setw(3) << freqTotSum << endl;
+		std::cout << "---------------------------------------" << endl;
 		outputFile.close();
 
 		//Ouputs the data based on user choice
 		std::cout << "FUNCTIONALITY WITH AVL TREE" << endl;
+		std::cout << "---------------------------------------" << endl;
 		bool userWantsToContinue = true;
 		do
 		{
@@ -121,11 +125,13 @@ int main(int argc, char* argv[]) {
 				std::getline(data, line);
 			}
 			data.close();
+			cout << "RESULTS: " << endl;
 			tree.print();
 			auto end = high_resolution_clock::now();
 			auto duration = duration_cast<milliseconds>(end - start);
-			std::cout << duration.count() << endl;
+			std::cout << "Duration in milliseconds: " << duration.count() << endl << endl;
 			userWantsToContinue = getContinueResponse(); 
+			std::cout << endl;
 		} while (userWantsToContinue);
 
 		std::cout << "Goodbye!" << endl;
@@ -137,7 +143,7 @@ int main(int argc, char* argv[]) {
 		srand(time(NULL));
 
 		const int NUM_OF_SECTORS = 10;
-		int numOfTuples = 10;
+		int numOfTuples = 100000;
 
 		unordered_set<string> usedSymbols;      // Set to hold the used symbols. No repetition.
 		string listOfSectors[] = { "Industrials", "Health Care",
@@ -173,18 +179,23 @@ int main(int argc, char* argv[]) {
 			}
 		}
 		// Outputs important summary of the data
+		std::cout << "---------------------------------------" << endl;
+		std::cout << "SUMMARY OF DATA" << endl;
+		std::cout << "---------------------------------------" << endl;
 		int freqTotSum = 0;
 		for (auto it = sectorToFrequency.begin(); it != sectorToFrequency.end(); it++)
 		{
-			cout << it->first << ":" << it->second << endl;
+			cout << setw(27) << left << it->first << ": " << setw(3) << right << it->second << endl;
 			freqTotSum += it->second;
 		}
-		cout << freqTotSum << endl;
+		cout << setw(27) << left << "Number of tuples" << ": " << setw(3) << freqTotSum << endl;
+		std::cout << "---------------------------------------" << endl;
 		outputFile.close();
 
 		//Ouputs the data based on user choice
 
 		cout << "FUNCTIONALITY WITH MAXHEAP" << endl;
+		std::cout << "---------------------------------------" << endl;
 		bool userWantsToContinue = true;
 		do
 		{
@@ -221,11 +232,14 @@ int main(int argc, char* argv[]) {
 				else counter++;
 				getline(data, line);
 			}
+			data.close();
+			cout << "RESULTS: " << endl;
 			heap.sortAndDisplay();
 			auto end = high_resolution_clock::now();
 			auto duration = duration_cast<milliseconds>(end - start);
-			cout << duration.count() << endl;
+			std::cout << "Duration in milliseconds: " << duration.count() << endl << endl;
 			userWantsToContinue = getContinueResponse();
+			std::cout << endl;
 		} while (userWantsToContinue);
 
 		std::cout << "Goodbye!" << endl;
